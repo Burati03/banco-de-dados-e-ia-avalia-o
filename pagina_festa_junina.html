@@ -1,48 +1,83 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Festa Junina - Análise de Dados</title>
+  <title>Visualização - Festa Junina</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { text-align: center; background-color: #fff8e1; font-family: Arial; }
-    canvas { max-width: 600px; margin: 20px auto; }
-    h1 { color: #d84315; }
+    body { font-family: Arial, sans-serif; margin: 30px; background-color: #fff8f0; }
+    h1 { color: #cc0000; }
+    .grafico-container { width: 600px; margin: auto; }
+    .entrada { margin-top: 40px; text-align: center; }
+    input, button { padding: 6px; margin: 5px; }
   </style>
 </head>
 <body>
-  <h1>🎉 Análise da Festa Junina 🎉</h1>
+  <h1>Gráfico de Itens Preferidos - Festa Junina</h1>
+  <div class="grafico-container">
+    <canvas id="graficoItens"></canvas>
+  </div>
 
-  <canvas id="grafico1"></canvas>
+  <div class="entrada">
+    <h2>Adicionar Novo Dado Manualmente</h2>
+    <label>Item: <input type="text" id="novoItem"></label>
+    <label>Quantidade: <input type="number" id="novaQtd"></label>
+    <button onclick="adicionarDado()">Adicionar</button>
+  </div>
+
+  <div class="entrada">
+    <button onclick="exportarDados()">Exportar Dados (JSON)</button>
+  </div>
 
   <script>
-    const dados = [5, 3, 4, 5, 2, 4, 3, 4, 5, 3];
+    let labels = ['Pipoca', 'Cachorro-quente', 'Canjica', 'Pé-de-moleque', 'Paçoca'];
+    let dados = [12, 8, 6, 7, 5];
 
-    const ctx = document.getElementById('grafico1');
-    new Chart(ctx, {
+    const ctx = document.getElementById('graficoItens');
+    const graficoItens = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['P1','P2','P3','P4','P5','P6','P7','P8','P9','P10'],
+        labels: labels,
         datasets: [{
-          label: 'Satisfação Geral',
+          label: 'Quantidade de votos',
           data: dados,
           borderWidth: 1,
-          backgroundColor: '#ff7043'
+          backgroundColor: ['#e74c3c', '#f39c12', '#2ecc71', '#9b59b6', '#3498db']
         }]
       },
       options: {
-        scales: { y: { beginAtZero: true, max: 5 } }
+        scales: {
+          y: { beginAtZero: true }
+        }
       }
     });
 
-    // Desafio: Adicionar novo dado manual
-    function adicionarNovoDado() {
-      const novo = prompt("Digite a satisfação (1-5) do novo participante:");
-      dados.push(Number(novo));
-      alert("Novo dado adicionado! Recarregue a página para visualizar.");
+    function adicionarDado() {
+      const item = document.getElementById('novoItem').value;
+      const qtd = parseInt(document.getElementById('novaQtd').value);
+      if (item && !isNaN(qtd)) {
+        const index = labels.indexOf(item);
+        if (index !== -1) {
+          dados[index] += qtd;
+        } else {
+          labels.push(item);
+          dados.push(qtd);
+          graficoItens.data.datasets[0].backgroundColor.push('#'+Math.floor(Math.random()*16777215).toString(16));
+        }
+        graficoItens.update();
+      }
     }
 
-    adicionarNovoDado();
+    function exportarDados() {
+      const exportado = labels.map((item, i) => ({ item: item, total: dados[i] }));
+      const blob = new Blob([JSON.stringify(exportado, null, 2)], {type : 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dados_festa_junina.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   </script>
 </body>
 </html>
