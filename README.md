@@ -1,1 +1,0 @@
-# banco-de-dados-e-ia-avalia-o

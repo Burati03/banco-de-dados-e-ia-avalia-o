@@ -1,0 +1,11 @@
+id,idade,gosta_de_comidas,participa_de_brinquedos,avalia_organizacao,satisfacao_geral
+1,15,Sim,Sim,5,5
+2,17,Não,Não,3,3
+3,16,Sim,Sim,4,4
+4,18,Sim,Não,5,5
+5,14,Não,Não,2,2
+6,19,Sim,Sim,4,4
+7,16,Sim,Não,3,3
+8,17,Não,Sim,4,4
+9,15,Sim,Sim,5,5
+10,18,Não,Não,3,3
